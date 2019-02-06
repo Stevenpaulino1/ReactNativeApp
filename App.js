@@ -7,8 +7,17 @@
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TextInput, Button} from 'react-native';
+import React, { Component } from "react";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button
+} from "react-native";
+
+import Listitem from "./src/components/Listitem/Listitem";
 
 // const instructions = Platform.select({
 //   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -20,28 +29,47 @@ import {Platform, StyleSheet, Text, View, TextInput, Button} from 'react-native'
 type Props = {};
 export default class App extends Component<Props> {
   state = {
-    placeName:'',
-  }
-  placeNameChangeHandler = (val) => {
+    placeName: "",
+    places: []
+  };
+
+  placeNameChangeHandler = val => {
     this.setState({
-      placeName:val
-    })
+      placeName: val
+    });
+  };
+
+  placeSubmitHandler = () => {
+    if (this.state.placeName.trim() === "") {
+      return;
+    }
+    this.setState(prevState => {
+      return {
+        places: prevState.places.concat(prevState.placeName)
+      };
+    });
   };
 
   render() {
+    const placesOutput = this.state.places.map((place, i) => (
+      <Listitem key={i} placeName={place} />
+    ));
     return (
       <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Something Awesome..."
-          value={this.state.placeName} onChangeText={this.placeNameChangeHandler}
-          style={styles.placeInput}
-        />
-        <Button
-        title="Add"
-        style={styles.placeButton}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Something Awesome..."
+            value={this.state.placeName}
+            onChangeText={this.placeNameChangeHandler}
+            style={styles.placeInput}
+          />
+          <Button
+            title="Add"
+            style={styles.placeButton}
+            onPress={this.placeSubmitHandler}
+          />
+        </View>
+        <View>{placesOutput}</View>
       </View>
     );
   }
@@ -51,21 +79,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 40,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
   },
-  inputContainer:{
+  inputContainer: {
     // flex:1,
-    width:"100%",
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems:"center"
+    alignItems: "center"
   },
-  placeInput:{
-    width:"70%"
+  placeInput: {
+    width: "70%"
   },
-  placeButton:{
-    width:"30%"
+  placeButton: {
+    width: "30%"
   }
 });
